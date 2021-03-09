@@ -48,10 +48,10 @@ class AddressParse
         $this->type = $type;
         $this->textFilter = $textFilter;
         $this->nameMaxLength = $nameMaxLength;
-        $this->provinces = $this->readFileContent(__DIR__.'/../data/provinces.json');
-        $this->cities = $this->readFileContent(__DIR__.'/../data/cities.json');
-        $this->areas = $this->readFileContent(__DIR__.'/../data/areas.json');
-        $this->names = $this->readFileContent(__DIR__.'/../data/names.json');
+        $this->provinces = $this->readFileContent(__DIR__ . '/../data/provinces.json');
+        $this->cities = $this->readFileContent(__DIR__ . '/../data/cities.json');
+        $this->areas = $this->readFileContent(__DIR__ . '/../data/areas.json');
+        $this->names = $this->readFileContent(__DIR__ . '/../data/names.json');
     }
 
     /**
@@ -96,12 +96,12 @@ class AddressParse
         $area = reset($parseResult['area']);
         $detail = $parseResult['detail'];
         foreach ($detail as $key => $value) {
-            $detail[$key] = str_replace([$province['name'] ?: '', $city['name'] ?: '', $area['name'] ?: ''], '', $value);
+            $detail[$key] = str_replace([$province['name'] ?? '', $city['name'] ?? '', $area['name'] ?? ''], '', $value);
         }
         $detail = array_filter(array_unique($detail));
         if ($detail && \count($detail) > 0) {
             $copyDetail = array_filter($detail, function ($item) {
-                return (bool) $item;
+                return (bool)$item;
             });
             sort($copyDetail);
             $name = '';
@@ -121,10 +121,10 @@ class AddressParse
                 }));
             }
         }
-        $provinceName = $province['name'] ?: '';
-        $provinceCode = $province['code'] ?: '';
-        $cityName = $city['name'] ?: '';
-        $cityCode = $city['code'] ?: '';
+        $provinceName = $province['name'] ?? '';
+        $provinceCode = $province['code'] ?? '';
+        $cityName = $city['name'] ?? '';
+        $cityCode = $city['code'] ?? '';
         if (\in_array($cityName, ['市辖区', '区', '县', '镇'], true)) {
             $cityName = $provinceName;
         }
@@ -134,8 +134,8 @@ class AddressParse
             'provinceCode' => $provinceCode,
             'city' => $cityName,
             'cityCode' => $cityCode,
-            'area' => $area['name'] ?: '',
-            'areaCode' => $area['code'] ?: '',
+            'area' => $area['name'] ?? '',
+            'areaCode' => $area['code'] ?? '',
             'detail' => implode('', $detail),
             'phone' => $parseResult['phone'],
             'postalCode' => $parseResult['postalCode'],
@@ -219,7 +219,7 @@ class AddressParse
             $fragmentArray = mb_str_split($fragment);
             for ($i = 1; $i < \count($fragmentArray); ++$i) {
                 $str = mb_substr($fragment, 0, $i + 1);
-                $code = $province[0] ? $province[0]['code'] : '[0-9]{1,6}';
+                $code =  $province[0]['code'] ?? '[0-9]{1,6}';
                 $reg = "/{\"code\":\"[0-9]{1,6}\",\"name\":\"{$str}[\\x{4e00}-\\x{9fa5}]*?\",\"provinceCode\":\"{$code}\"}/u";
                 if (preg_match($reg, $this->cities, $m)) {
                     $city = [];
@@ -228,7 +228,7 @@ class AddressParse
                 }
             }
             if ($city) {
-                $provinceCode = $province[0]['code'];
+                $provinceCode = $province[0]['code'] ?? '';
                 $fragment = str_replace($matchStr, '', $fragment);
                 if (0 === \count($province)) {
                     $reg = "/{\"code\":\"{$provinceCode}\",\"name\":\"[\\x{4e00}-\\x{9fa5}]+?\"}/u";
@@ -243,8 +243,8 @@ class AddressParse
             $fragmentArray = mb_str_split($fragment);
             for ($i = 1; $i < \count($fragmentArray); ++$i) {
                 $str = mb_substr($fragment, 0, $i + 1);
-                $provinceCode = $province[0] ? $province[0]['code'] : '[0-9]{1,6}';
-                $cityCode = $city[0] ? $city[0]['code'] : '[0-9]{1,6}';
+                $provinceCode = $province[0]['code'] ?? '[0-9]{1,6}';
+                $cityCode = $city[0]['code'] ?? '[0-9]{1,6}';
                 $reg = "/{\"code\":\"[0-9]{1,9}\",\"name\":\"{$str}[\\x{4e00}-\\x{9fa5}]*?\",\"cityCode\":\"{$cityCode}\",\"provinceCode\":\"{$provinceCode}\"}/u";
                 if (preg_match($reg, $this->areas, $m)) {
                     $area = [];
@@ -332,7 +332,7 @@ class AddressParse
                 $name = $tempCity['name'];
                 $nameArr = mb_str_split($name);
                 $provinceCode = $tempCity['provinceCode'];
-                $currentProvince = $province[0];
+                $currentProvince = $province[0] ?? [];
                 if ($currentProvince) {
                     if ($currentProvince['code'] === $provinceCode) {
                         $replaceName = '';
@@ -372,8 +372,8 @@ class AddressParse
             $nameArr = mb_str_split($name);
             $provinceCode = $tempAreas['provinceCode'];
             $cityCode = $tempAreas['cityCode'];
-            $currentProvince = $province[0] ?: [];
-            $currentCity = $city[0] ?: [];
+            $currentProvince = $province[0] ?? [];
+            $currentCity = $city[0] ?? [];
             // 有省或者市
             if ($currentProvince || $currentCity) {
                 if (($currentProvince && $currentProvince['code'] === $provinceCode)
@@ -460,8 +460,8 @@ class AddressParse
             $this->address = str_replace($value, ' ', $this->address);
         }
         $reg = "/[`~!@#$^&*()=|{}':;',\\[\\].<>\\/?~！@#￥……&*（）——|{}【】‘；：”“’。，、？]/u";
-        $this->address = (string) preg_replace($reg, ' ', $this->address);
-        $this->address = (string) preg_replace('/\s{2,}/u', ' ', $this->address);
+        $this->address = (string)preg_replace($reg, ' ', $this->address);
+        $this->address = (string)preg_replace('/\s{2,}/u', ' ', $this->address);
 
         return $this->address;
     }
@@ -477,7 +477,7 @@ class AddressParse
     {
         $names = json_decode($this->names, true);
 
-        if (empty($fragment) || (bool) preg_match('/[\\u4E00-\\u9FA5]/', $fragment)) {
+        if (empty($fragment) || (bool)preg_match('/[\\u4E00-\\u9FA5]/', $fragment)) {
             return '';
         }
         // 如果包含下列称呼，则认为是名字，可自行添加
@@ -505,10 +505,10 @@ class AddressParse
      */
     private function parsePhone()
     {
-        $this->address = (string) preg_replace('/(\\d{3})-(\\d{4})-(\\d{4})/u', '$1$2$3', $this->address);
-        $this->address = (string) preg_replace('/(\\d{3}) (\\d{4}) (\\d{4})/u', '$1$2$3', $this->address);
-        $this->address = (string) preg_replace('/(\\d{4}) \\d{4} \\d{4}/u', '$1$2$3', $this->address);
-        $this->address = (string) preg_replace('/(\\d{4})/u', '$1$2$3', $this->address);
+        $this->address = (string)preg_replace('/(\\d{3})-(\\d{4})-(\\d{4})/u', '$1$2$3', $this->address);
+        $this->address = (string)preg_replace('/(\\d{3}) (\\d{4}) (\\d{4})/u', '$1$2$3', $this->address);
+        $this->address = (string)preg_replace('/(\\d{4}) \\d{4} \\d{4}/u', '$1$2$3', $this->address);
+        $this->address = (string)preg_replace('/(\\d{4})/u', '$1$2$3', $this->address);
         $phoneReg = '/(\\d{7,12})|(\\d{3,4}-\\d{6,8})|(86-[1][0-9]{10})|(86[1][0-9]{10})|([1][0-9]{10})/u';
         preg_match($phoneReg, $this->address, $m);
         $phone = '';
