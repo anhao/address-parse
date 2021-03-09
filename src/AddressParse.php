@@ -48,10 +48,10 @@ class AddressParse
         $this->type = $type;
         $this->textFilter = $textFilter;
         $this->nameMaxLength = $nameMaxLength;
-        $this->provinces = $this->readFileContent('../data/provinces.json');
-        $this->cities = $this->readFileContent('../data/cities.json');
-        $this->areas = $this->readFileContent('../data/areas.json');
-        $this->names = $this->readFileContent('../data/names.json');
+        $this->provinces = $this->readFileContent(__DIR__.'/../data/provinces.json');
+        $this->cities = $this->readFileContent(__DIR__.'/../data/cities.json');
+        $this->areas = $this->readFileContent(__DIR__.'/../data/areas.json');
+        $this->names = $this->readFileContent(__DIR__.'/../data/names.json');
     }
 
     /**
