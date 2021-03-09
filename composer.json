@@ -1,7 +1,6 @@
 {
   "name": "alapi/address_parse",
   "description": "收货地址智能解析",
-  "version": "0.0.2",
   "license": "MIT",
   "type": "library",
   "keywords": ["地址解析","收货地址解析","address parse"],
