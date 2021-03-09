@@ -3,7 +3,7 @@
 
 ## 安装 
 ```
-composer require alapi/address-parse
+composer require alapi/address_parse
 ```
 
 
