@@ -61,7 +61,7 @@ class AddressParse
      *
      * @return array
      */
-    public function parse(string $address)
+    public function parse(string $address): array
     {
         $this->address = $address;
         $parseResult = [
@@ -219,7 +219,7 @@ class AddressParse
             $fragmentArray = mb_str_split($fragment);
             for ($i = 1; $i < \count($fragmentArray); ++$i) {
                 $str = mb_substr($fragment, 0, $i + 1);
-                $code =  $province[0]['code'] ?? '[0-9]{1,6}';
+                $code = $province[0]['code'] ?? '[0-9]{1,6}';
                 $reg = "/{\"code\":\"[0-9]{1,6}\",\"name\":\"{$str}[\\x{4e00}-\\x{9fa5}]*?\",\"provinceCode\":\"{$code}\"}/u";
                 if (preg_match($reg, $this->cities, $m)) {
                     $city = [];
@@ -228,7 +228,7 @@ class AddressParse
                 }
             }
             if ($city) {
-                $provinceCode = $province[0]['code'] ?? '';
+                $provinceCode = $province[0]['code'] ?? $city[0]['provinceCode'];
                 $fragment = str_replace($matchStr, '', $fragment);
                 if (0 === \count($province)) {
                     $reg = "/{\"code\":\"{$provinceCode}\",\"name\":\"[\\x{4e00}-\\x{9fa5}]+?\"}/u";
@@ -253,8 +253,8 @@ class AddressParse
                 }
             }
             if ($area) {
-                $provinceCode = $area[0]['provinceCode'];
-                $cityCode = $area[0]['cityCode'];
+                $provinceCode = $province[0]['code'] ?? $area[0]['provinceCode'];
+                $cityCode = $city[0]['code'] ?? $area[0]['cityCode'];
                 $fragment = str_replace($matchStr, '', $fragment);
                 if (0 === \count($province)) {
                     $reg = "/{\"code\":\"{$provinceCode}\",\"name\":\"[\\x{4e00}-\\x{9fa5}]+?\"}/u";
@@ -290,7 +290,7 @@ class AddressParse
      *
      * @return array
      */
-    private function parseRegion($fragment, $hasParseResult)
+    private function parseRegion($fragment, $hasParseResult): array
     {
         $province = [];
         $city = [];
