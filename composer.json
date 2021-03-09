@@ -1,0 +1,33 @@
+{
+  "name": "alapi/address_parse",
+  "description": "收货地址智能解析",
+  "version": "0.0.1",
+  "minimum-stability": "stable",
+  "license": "MIT",
+  "type": "library",
+  "keywords": ["地址解析","收货地址解析","address parse"],
+  "homepage": "https://github.com/anhao/address-parse",
+  "authors": [
+    {
+      "name": "Alone88",
+      "email": "im@alone88.cn",
+      "homepage": "https://alone88.cn"
+    }
+  ],
+  "support": {
+    "email": "im@alone88.cn",
+    "issues": "https://github.com/anhao/address-parse/issues",
+    "source": "https://github.com/anhao/address-parse"
+
+  },
+  "require": {
+    "php": "^7.4.*",
+    "ext-json": "*",
+    "ext-mbstring": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "ALAPI\\": "src/"
+    }
+  }
+}
