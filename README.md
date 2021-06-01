@@ -52,7 +52,7 @@ $parse->setType(2)->parse($address); #树查找解析， type 为2
 ```
 
 ## ALAPI
-[ALAPI](https://www.alapi.cn]) ,为开发者提供各种 API 开发支持
+[ALAPI](https://www.alapi.cn) ,为开发者提供各种 API 开发支持
 
 ## 感谢
 该组件参考 [zh-address-parse](https://github.com/ldwonday/zh-address-parse) 思路而来
