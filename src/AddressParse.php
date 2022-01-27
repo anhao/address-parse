@@ -26,12 +26,12 @@ class AddressParse
     /**
      * 解析方式,1为正则，2为树查找.
      */
-    private int $type = 1;
+    private int $type;
 
     /**
      * 过滤字词.
      */
-    private array $textFilter = [];
+    private array $textFilter;
 
     /**
      * 名字最大长度，默认 4.
@@ -80,12 +80,12 @@ class AddressParse
         $splitAddress = array_filter(array_map(function ($item) {
             return trim($item);
         }, $splitAddress));
-        foreach ($splitAddress as $key => $value) {
+        foreach ($splitAddress as $value) {
             if (!$parseResult['province'] || !$parseResult['city'] || !$parseResult['area']) {
                 $parse = 1 === $this->type ? $this->parseRegionWithRegexp($value, $parseResult) : $this->parseRegion($value, $parseResult);
-                $parseResult['province'] = $parse['province'] ?: [];
-                $parseResult['city'] = $parse['city'] ?: [];
-                $parseResult['area'] = $parse['area'] ?: [];
+                $parseResult['province'] = $parse['province'] ?? [];
+                $parseResult['city'] = $parse['city'] ?? [];
+                $parseResult['area'] = $parse['area'] ?? [];
                 $parseResult['detail'] = array_merge($parseResult['detail'], $parse['detail']);
             } else {
                 $parseResult['detail'][] = $value;
@@ -190,9 +190,9 @@ class AddressParse
      */
     private function parseRegionWithRegexp($fragment, $hasParseResult)
     {
-        $province = $hasParseResult['province'] ?: [];
-        $city = $hasParseResult['city'] ?: [];
-        $area = $hasParseResult['area'] ?: [];
+        $province = $hasParseResult['province'] ?? [];
+        $city = $hasParseResult['city'] ?? [];
+        $area = $hasParseResult['area'] ?? [];
         $detail = [];
         $matchStr = '';
 
@@ -477,7 +477,7 @@ class AddressParse
     {
         $names = json_decode($this->names, true);
 
-        if (empty($fragment) || (bool)preg_match('/[\\u4E00-\\u9FA5]/', $fragment)) {
+        if (empty($fragment) || preg_match('/[\\x4E00-\\x9FA5]/', $fragment)) {
             return '';
         }
         // 如果包含下列称呼，则认为是名字，可自行添加
@@ -485,7 +485,7 @@ class AddressParse
         if (\in_array($fragment, $nameCall, true)) {
             return $fragment;
         }
-        $filters = ['街道', '乡镇'];
+        $filters = ['街道', '乡镇','镇','乡'];
         if (\in_array($fragment, $filters, true)) {
             return '';
         }
