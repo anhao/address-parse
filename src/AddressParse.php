@@ -463,6 +463,11 @@ class AddressParse
         $this->address = (string)preg_replace($reg, ' ', $this->address);
         $this->address = (string)preg_replace('/\s{2,}/u', ' ', $this->address);
 
+        $municipality = ['北京','上海','天津','重庆'];
+        foreach ($municipality as $value){
+            $this->address = str_replace($value.$value,$value,$this->address);
+        }
+        
         return $this->address;
     }
 
